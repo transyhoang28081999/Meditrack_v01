@@ -1,0 +1,4 @@
+DROP DATABASE meditrack;
+CREATE DATABASE meditrack;
+USE meditrack;
+SHOW tables;
