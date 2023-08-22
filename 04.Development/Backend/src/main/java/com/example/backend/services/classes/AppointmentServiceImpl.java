@@ -1,11 +1,13 @@
 package com.example.backend.services.classes;
 
 import com.example.backend.controllers.controller_requests.CreateAppointmentRequest;
-import com.example.backend.controllers.controller_responses.AppointmentFindFromUserResponse;
+import com.example.backend.controllers.controller_responses.FindFromUserResponse;
 import com.example.backend.generics.Pagination;
 import com.example.backend.models.Appointment;
 import com.example.backend.enums.AppointmentStatusEnum;
+import com.example.backend.models.UserProfile;
 import com.example.backend.repositories.AppointmentRepository;
+import com.example.backend.repositories.UserProfileRespository;
 import com.example.backend.securities.user.User;
 import com.example.backend.securities.user.UserRepository;
 import com.example.backend.services.interfaces.AppointmentService;
@@ -21,19 +23,24 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserProfileRespository userProfileRespository;
     @Override
-    public AppointmentFindFromUserResponse getAllAppointments(Long userID, int pageNo, int pageSize, AppointmentStatusEnum appointmentStatus) {
+    public FindFromUserResponse<Appointment> getAllAppointments(Long upID, int pageNo, int pageSize, AppointmentStatusEnum appointmentStatus) {
         List<Appointment> allAppointments;
-        if(appointmentStatus == null) allAppointments = appointmentRepository.findAllAppointmentOfThis(userID);
-        else allAppointments = appointmentRepository.findAllAppointmentOfThis(userID, appointmentStatus);
+        if(appointmentStatus == null) allAppointments = appointmentRepository.findAllAppointmentOfThis(upID);
+        else allAppointments = appointmentRepository.findAllAppointmentOfThis(upID, appointmentStatus);
 
         int totalPages = Math.floorDiv(allAppointments.size(), pageSize) + 1;
 
         //Phan trang cho danh sach appointments
         Pagination<Appointment> pagination = new Pagination<Appointment>();
         List<Appointment> appointments = pagination.pagination(allAppointments, pageNo, pageSize);
-        return new AppointmentFindFromUserResponse(appointments, pageNo, pageSize, totalPages, allAppointments.size());
+        return new FindFromUserResponse<Appointment>(appointments, pageNo, pageSize, totalPages, allAppointments.size());
+    }
+
+    @Override
+    public Appointment getSingleAppointment(Long appointmentID) {
+        return appointmentRepository.findById(appointmentID).orElseThrow();
     }
     // hàm xử lý chuỗi string thời gian sang LocalDatetime
     public LocalDateTime handleDatetime(String datetime) {
@@ -56,9 +63,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public String createAppointment(Long userID, CreateAppointmentRequest createAppointmentRequest) {
+    public String createAppointment(Long upID, CreateAppointmentRequest createAppointmentRequest) {
         try{
-            User user = userRepository.findByUserID(userID).orElseThrow();
+            UserProfile userProfile = userProfileRespository.findByUpID(upID).orElseThrow();
 
             // Tạo Appointment
             Appointment appointment = new Appointment(createAppointmentRequest.getAppAddress(),
@@ -67,7 +74,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     createAppointmentRequest.getAppDescription(),
                     createAppointmentRequest.getAppSpecialization(),
                     createAppointmentRequest.getAppDoctorName(),
-                    user);
+                    userProfile);
             appointmentRepository.save(appointment);
             return "Create an appointment successfully!";
         } catch (NoSuchElementException e){

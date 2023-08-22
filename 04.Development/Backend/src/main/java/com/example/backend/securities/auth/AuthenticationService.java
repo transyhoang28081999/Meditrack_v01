@@ -1,7 +1,10 @@
 package com.example.backend.securities.auth;
 
 import com.example.backend.enums.RoleEnum;
+import com.example.backend.enums.UserProfileEnum;
 import com.example.backend.enums.UserStatusEnum;
+import com.example.backend.models.UserProfile;
+import com.example.backend.repositories.UserProfileRespository;
 import com.example.backend.securities.user.User;
 import com.example.backend.securities.user.RoleRepository;
 import com.example.backend.securities.user.UserRepository;
@@ -28,6 +31,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+
+
+    private final UserProfileRespository userProfileRespository;
 
     public String register(RegisterRequest registerRequest){
         var user = User.builder()
@@ -57,8 +63,18 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(userDetails);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+
+        String name;
+        if(user.getRole().getRoleName() == RoleEnum.ROLE_ADMIN){
+            name = "Admin";
+        }
+        else {
+            UserProfile userProfile = userProfileRespository.findSingleByUserID(user.getUserID(), UserProfileEnum.MAIN).orElseThrow();
+            name = userProfile.getUpName();
+        }
+
         return AuthenticationResponse.builder()
-                .userAccount(user.getUserAccount())
+                .name(name)
                 .token(jwtToken)
                 .build();
     }

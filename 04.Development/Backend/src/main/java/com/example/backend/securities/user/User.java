@@ -2,6 +2,7 @@ package com.example.backend.securities.user;
 
 import com.example.backend.enums.UserStatusEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class User {
     private String userAccount;
     @Column(name = "user_password", nullable = false)
     private String userPassword;
+    @Email
     @Column(name = "user_email", nullable = false)
     private String userEmail;
     @Column(name = "user_created_at", unique = true)

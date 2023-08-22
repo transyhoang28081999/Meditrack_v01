@@ -14,26 +14,18 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Background {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bg_id")
+    private Long bgID;
 
-    @EmbeddedId
-    private BackgroundId id;
+    @Column(name = "bg_date", nullable = false, unique = true)
+    private LocalDate bgDate;
 
     @ManyToOne
-    @MapsId("medID")
-    @JoinColumn(name = "med_id")
+    @JoinColumn(name = "med_id", referencedColumnName = "med_id", nullable = false)
     private MedicalRecord medicalRecord;
 
     @Column(name = "bg_description")
     private String bgDescription;
-
-    @Data
-    @Embeddable
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class BackgroundId implements Serializable {
-
-        private Long medID;
-        @Column(name = "bg_date")
-        private LocalDate bgDate;
-    }
 }

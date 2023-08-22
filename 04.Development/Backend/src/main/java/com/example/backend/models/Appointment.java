@@ -19,13 +19,13 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "app_id")
     private Long appID;
-    @Column(name = "app_address")
+    @Column(name = "app_address", nullable = false)
     private String appAddress;
-    @Column(name = "app_datetime")
+    @Column(name = "app_datetime", nullable = false)
     private LocalDateTime appDatetime;
     @Column(name = "app_institute")
     private String appInstitute;
-    @Column(name = "app_description")
+    @Column(name = "app_description", length = 1000)
     private String appDescription;
     @Column(name = "app_specialization")
     private String appSpecialization;
@@ -34,13 +34,13 @@ public class Appointment {
     @Column(name = "app_status")
     @Enumerated(EnumType.STRING)
     private AppointmentStatusEnum appStatus;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "up_id", referencedColumnName = "up_id")
+    private UserProfile userProfile;
 
     public Appointment(String appAddress, LocalDateTime appDatetime,
                        String appInstitute, String appDescription, String appSpecialization,
-                       String appDoctorName, User user) {
+                       String appDoctorName, UserProfile userProfile) {
         this.appAddress = appAddress;
         this.appDatetime = appDatetime;
         this.appInstitute = appInstitute;
@@ -48,7 +48,7 @@ public class Appointment {
         this.appSpecialization = appSpecialization;
         this.appDoctorName = appDoctorName;
         this.appStatus = AppointmentStatusEnum.ONGOING;
-        this.user = user;
+        this.userProfile = userProfile;
     }
 
     // address, date, time, institute, description, specialization, doctor name

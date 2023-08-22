@@ -33,6 +33,10 @@ public class UserService {
         return adminFindUsersResponse;
     }
 
+    public User getSingleUser(Long userID) {
+        return userRepository.findByUserID(userID).orElseThrow();
+    }
+
     public String changePassword(Long userID, ChangePasswordRequest changePasswordRequest) {
         try {
             User user = userRepository.findByUserID(userID).orElseThrow();
@@ -98,4 +102,6 @@ public class UserService {
             return "User does not exist";
         }
     }
+
+
 }

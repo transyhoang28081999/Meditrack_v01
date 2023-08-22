@@ -1,4 +1,4 @@
-package com.example.backend.securities.auth;
+package com.example.backend.controllers.controller_requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationResponse {
-    private String name;
-    private String token;
+public class UpdateMedicalRequest {
+    private String medHistory;
 }

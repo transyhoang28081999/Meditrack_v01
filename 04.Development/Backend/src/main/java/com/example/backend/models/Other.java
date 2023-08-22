@@ -1,5 +1,6 @@
 package com.example.backend.models;
 
+import com.example.backend.securities.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,17 +8,20 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "medical_records")
+@Table(name = "others")
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicalRecord {
+public class Other{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "med_id")
-    private Long medID;
-    @Column(name = "med_history", nullable = false, length = 1500)
-    private String medHistory;
+    @Column(name = "rem_id")
+    private Long remID;
+
     @OneToOne
+    @MapsId
+    @JoinColumn(name = "rem_id")
+    private Reminder reminder;
+
+    @ManyToOne
     @JoinColumn(name = "up_id", referencedColumnName = "up_id")
     private UserProfile userProfile;
 }

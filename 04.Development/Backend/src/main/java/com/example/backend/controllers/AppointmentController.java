@@ -1,8 +1,9 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllers.controller_requests.CreateAppointmentRequest;
-import com.example.backend.controllers.controller_responses.AppointmentFindFromUserResponse;
+import com.example.backend.controllers.controller_responses.FindFromUserResponse;
 import com.example.backend.enums.AppointmentStatusEnum;
+import com.example.backend.models.Appointment;
 import com.example.backend.services.interfaces.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -10,18 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1.0/appointment/{userID}")
+@RequestMapping("api/v1.0/user/appointment/{userID}")
 public class AppointmentController {
     private final AppointmentService appointmentService;
 
     //User lấy thông tin tất cả cuộc hẹn
-    @GetMapping
-    public AppointmentFindFromUserResponse getAllAppointments(@PathVariable Long userID,
-                                                              @RequestParam int pageNo,
-                                                              @RequestParam int pageSize,
-                                                              @RequestParam(required = false) AppointmentStatusEnum appointmentStatus) {
-//        if(appointmentStatus == null) return appointmentService.getAllAppointments(userID, pageNo, pageSize);
-        return appointmentService.getAllAppointments(userID, pageNo, pageSize, appointmentStatus);
+    @GetMapping("get-all/{upID}")
+    public FindFromUserResponse<Appointment> getAllAppointments(@PathVariable Long upID,
+                                                                @RequestParam int pageNo,
+                                                                @RequestParam int pageSize,
+                                                                @RequestParam(required = false) AppointmentStatusEnum appointmentStatus) {
+        return appointmentService.getAllAppointments(upID, pageNo, pageSize, appointmentStatus);
+    }
+    @GetMapping("get-single/{appointmentID}")
+    public Appointment getSingleAppointment(@PathVariable Long appointmentID) {
+        return appointmentService.getSingleAppointment(appointmentID);
     }
     @PostMapping("create-appointment")
     public String createAppointment(@PathVariable Long userID, @RequestBody CreateAppointmentRequest createAppointmentRequest) {

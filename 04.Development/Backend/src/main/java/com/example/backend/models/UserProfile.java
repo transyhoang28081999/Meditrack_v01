@@ -1,5 +1,6 @@
 package com.example.backend.models;
 
+import com.example.backend.enums.UserProfileEnum;
 import com.example.backend.securities.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,11 +26,12 @@ public class UserProfile {
     private String upPhone;
     @Column(name = "up_gender")
     private String upGender;
-    @Column(name = "up_idcode")
+    @Column(name = "up_idcode", length = 20)
     private String upIDCode;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", unique = true)
     private User user;
-    @OneToOne(mappedBy = "userProfile")
-    private MedicalRecord medicalRecord;
+    @Column(name = "up_role")
+    @Enumerated(EnumType.STRING)
+    private UserProfileEnum upRole;
 }

@@ -1,5 +1,6 @@
 package com.example.backend.securities.config;
 
+import com.example.backend.enums.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1.0/auth/**").permitAll()
+                        .requestMatchers("/api/v1.0/admin/**").hasAuthority(String.valueOf(RoleEnum.ROLE_ADMIN))
+                        .requestMatchers("/api/v1.0/user/**").hasAuthority(String.valueOf(RoleEnum.ROLE_USER))
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -38,17 +41,4 @@ public class SecurityConfiguration {
         http.cors(Customizer.withDefaults());
         return http.build();
     }
-
-    // @Bean
-    // CorsConfigurationSource corsConfigurationSource(){
-    // 	CorsConfiguration configuration = new CorsConfiguration();
-    // 	configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-    // 	configuration.setAllowedMethods(Arrays.asList("POST"));
-    // 	configuration.setAllowedHeaders(List.of("Authorization"));
-
-    // 	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    // 	source.registerCorsConfiguration("/**", configuration);
-
-    // 	return source;
-    // }
 }
