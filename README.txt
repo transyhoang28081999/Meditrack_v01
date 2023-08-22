@@ -1,0 +1,2 @@
+- Phần Backend ở trong DEVELOPMENT (thư mục).(Backend part in development folder)
+- Phần data fake được để ở database cũng trong DEVELOPMENT. (Datafake part also in development folder).
