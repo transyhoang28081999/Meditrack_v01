@@ -1,7 +1,5 @@
 package com.example.backend.generics;
 
-import com.example.backend.securities.user.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
